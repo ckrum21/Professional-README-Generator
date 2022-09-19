@@ -40,7 +40,7 @@ let licenseSection = '';
 if (license === 'None'){
   licenseSection = ''
 } else {
-  licenseSection = 'License: ${license}'
+  licenseSection = `License: ${license}`
 }
 return licenseSection;
 }
