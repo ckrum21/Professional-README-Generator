@@ -1,47 +1,11 @@
 // TODO: Include packages needed for this application
 const inquirer = require('inquirer');
 const fs = require('fs');
+const generateMarkdown = require('./utils/generateMarkdown.js');
 
-const generateREADME = ({title, description, installation, usageInformation, contributionGuidelines, testInstructions}) =>
-  `# <${title}>
-
-  ## Description
-  ${description}
-  
-  ## Table of Contents
-  
-  ## Installation
-  ${installation}
-
-  ## Usage
-  ${usageInformation}
-
-  ## Contribute Guidelines
-  ${contributionGuidelines}
-
-  ## Tests
-  ${testInstructions}
-
-  ## Credits
-  
-  
-  ## License
-  
-  
-  ## Badges
-  
-  ## Features
-  
-  
-
-  
-  
-
-  `;
 
 // TODO: Create an array of questions for user input
-inquirer
-  .prompt([
+const questions = [
     {
       type: 'input',
       name: 'title',
@@ -65,21 +29,49 @@ inquirer
     {
       type: 'input',
       name: 'contributionGuidelines',
-      message: 'What is the contribution guidelines of your project?',
+      message: 'Who are the contributors of your project?',
     },
     {
       type: 'input',
       name: 'testInstructions',
       message: 'What is the test instructions for your website?',
     },
-  ])
+    {
+      type: 'list',
+      name: 'license',
+      message: 'What license is used for your website?',
+      choices:['MIT', 'GPL', 'BSD']
+    },
+    {
+      type: 'input',
+      name: 'github',
+      message: 'What is your GitHub username?',
+    },
+    {
+      type: 'input',
+      name: 'email',
+      message: 'What is your email address',
+    },
+
+  ];
 
 // TODO: Create a function to write README file
-// TODO: Create a function to initialize app
-.then((answers) => {
-    const readmePageContent = generateREADME(answers);
-
-    fs.writeFile('README.md', readmePageContent, (err) =>
+const printFile = fileContent => {
+  return new Promise((resolve, reject) =>
+  fs.writeFile('./generatedREADME.md', fileContent, (err) =>
       err ? console.log(err) : console.log('Successfully created README.md!')
-    );
-  });
+  ))
+};
+
+// TODO: Create a function to initialize app
+function init() {
+  inquirer.prompt(questions)
+      .then(function(data) {
+          console.log(data);
+      var fileContent = generateMarkdown(data);
+      printFile(fileContent)
+      });
+}
+
+// Function call to initialize app
+init();
